@@ -29,6 +29,8 @@ Do **not** use ZScript or post-2.8pre / post-GZDoom-1.8.6 language features. If 
 ## Quick checklist
 
 - Empty inherit-only actors still need `{}`.
+- Extra `}` between actors → `Expected '{', got 'actor'` — balance braces after multi-actor edits.
+- Inventory flags used by a weapon must be defined in this mod (or an earlier-loaded PK3); do not assume another wad’s `UOnce` flags exist.
 - `CheckInventory` is ACS-only — use `A_JumpIfInventory` / `CallACS` in DECORATE.
 - `goto` / `loop` / `wait` / `stop` / `fail` must be on their own line.
 - No all-0-tic state loops (crashes the engine).
