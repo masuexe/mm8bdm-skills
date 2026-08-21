@@ -5,7 +5,7 @@ description: >-
   Covers DECORATE gotchas, special lump naming, state labels, and ACC include rules.
   Use when writing or reviewing DECORATE, ACS, LOADACS, KEYCONF, SNDINFO, TEXTURES,
   or any Zandronum PK3 lump; when the user mentions Zandronum, DECORATE states,
-  A_Jump*, Offset, Spawn, or ACC.
+  A_Jump*, Offset, Spawn, ACC, CustomInventory, CLIENTSIDEONLY, or online desync.
 ---
 
 # Zandronum Modding
@@ -33,8 +33,12 @@ Do **not** use ZScript or post-2.8pre / post-GZDoom-1.8.6 language features. If 
 - Inventory flags used by a weapon must be defined in this mod (or an earlier-loaded PK3); do not assume another wad’s `UOnce` flags exist.
 - `CheckInventory` is ACS-only — use `A_JumpIfInventory` / `CallACS` in DECORATE.
 - `goto` / `loop` / `wait` / `stop` / `fail` must be on their own line.
+- `A_Jump*` labels need a sprite frame before bare `stop` — else `Jump target 'X' not found`.
 - No all-0-tic state loops (crashes the engine).
 - Spawn state's first frame action never runs — lead with a dummy `TNT1 A 0`.
+- Weapon `Ready` first sprite/frame must exist or `TryPickup` fails.
+- Most `A_Jump*` skip on the client (not `A_JumpIfInventory` on the local weapon); `CallACS` in `A_JumpIf` is RTT-delayed.
+- Do not spawn `+CLIENTSIDEONLY` from `CustomInventory` online; Give/Take from CustomInventory *does* sync ammo to clients.
 - Special lumps: basename without last extension → uppercase → max 8 chars (`DECORATE.txt` → `DECORATE`).
 
 ## MM8BDM-specific APIs

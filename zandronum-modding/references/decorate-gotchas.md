@@ -47,6 +47,31 @@ goto DeselectInstant
 
 The same rule applies to `loop` / `wait` / `stop` / `fail`: never append them after duration (and optional action) on one line. Standalone control lines also do **not** consume `A_Jump*` relative offsets (see below).
 
+## `A_Jump*` label targets need a sprite frame — not bare `stop`
+
+A state label that is only a control keyword (`stop` / `goto` / …) is **not** a valid `A_Jump*` / `A_JumpIf*` destination. The engine reports `Jump target 'Label' not found in ActorName`.
+
+Give the label at least one dummy frame (`TNT1 A 0` or any `SPRITE F 0`), then the control:
+
+```cpp
+// WRONG — Jump target 'No' not found in EdenIpecacPoisonStart_P
+Pickup:
+    TNT1 A 0 A_JumpIf(CallACS("rz_ShouldPoison") == 0, "No")
+    TNT1 A 0 ACS_NamedExecuteAlways("rz_SpawnDoT", 0)
+No:
+    stop
+
+// CORRECT — label has a frame before stop
+Pickup:
+    TNT1 A 0 A_JumpIf(CallACS("rz_ShouldPoison") == 0, "No")
+    TNT1 A 0 ACS_NamedExecuteAlways("rz_SpawnDoT", 0)
+No:
+    TNT1 A 0
+    stop
+```
+
+Same trap for fail/skip labels that only contain `stop` after an `A_JumpIfInventory` / `A_JumpIf`.
+
 ## Relative offsets ignore standalone state control instructions
 
 Relative offsets used by `A_Jump*` functions:
@@ -198,3 +223,129 @@ A_SpawnItemEx("SomeShot", 0, 0, 0, cos(pitch)*Speed, 0, sin(-pitch)*Speed, 0)
 ```
 
 `pitch` reads the **calling actor's own** `pitch` field. Do not route these through ACS when the native field is equivalent.
+
+## Weapon `Ready` first sprite frame must exist — otherwise `TryPickup` fails
+
+`AWeapon::TryPickup` refuses the weapon when the first `Ready` state's sprite/frame is missing:
+
+```cpp
+FState * ReadyState = FindState(NAME_Ready);
+if (ReadyState != NULL &&
+    ReadyState->GetFrame() < sprites[ReadyState->sprite].numframes)
+{
+    return Super::TryPickup (toucher);
+}
+return false;
+```
+
+The actor still **parses**. Online/offline, the player never receives it (`give`, pickup, or select). `TNT1` always exists. A `Ready` line whose sprite lump was never loaded (`XXXX A …` with no `XXXXA*` graphic) fails this check.
+
+Abstract weapon bases with **no** `Ready`/`Select`/`Deselect`/`Fire` at all are allowed (no warning). Once any of those states exist, all four are required.
+
+```cpp
+// WRONG — Ready sprite has no graphic; TryPickup returns false
+Ready:
+    NOPE A 1 A_WeaponReady
+    loop
+
+// CORRECT — real sprite, or TNT1 if the ready anim is entered later
+Ready:
+    TNT1 A 0
+    8H00 A 1 A_WeaponReady
+    loop
+```
+
+## Online: most `A_Jump*` skip on the client — server sends the frame
+
+For non-`+CLIENTSIDEONLY` actors, `A_Jump`, `A_JumpIf`, `A_JumpIfHealthLower`, … return immediately in client mode and do **not** jump. The server evaluates the jump and, for a weapon/flash psprite, calls `SERVER_HandleWeaponStateJump` (`SetPlayerPSprite` + ammo resync).
+
+Exception: `A_JumpIfInventory` / `A_JumpIfInTargetInventory` **do** evaluate on the local player's weapon/flash psprite. Do not rely on that for other actors' inventory.
+
+Until the psprite packet arrives, the client continues as if the jump was false. That is the usual weapon/prop flicker desync.
+
+### Force the client to wait for the server (weapon)
+
+`wait` is not a counted state — it sets the previous frame's `NextState` to itself. Combined with a guaranteed `A_Jump(256, …)` (clients skip it; the server always takes it), the client stays on that 1-tic frame until `SetPlayerPSprite`:
+
+```cpp
+// Client: A_Jump skipped → wait loops this frame.
+// Server: always jumps to offset 2 (the real continuation). Dummy TNT1 is offset 1.
+TNT1 A 1 A_Jump(256, 2)
+wait
+TNT1 A 0
+// … real states …
+```
+
+Packet loss can leave the client stuck on `wait`. Prefer flipping the jump so the common path is the fall-through (see the MM8BDM DECORATE tutorial desync section) when a stuck wait is unacceptable.
+
+### `CallACS` inside `A_JumpIf` on a weapon is RTT-delayed
+
+`A_JumpIf` still **evaluates** its expression on the client (`ACTION_PARAM_BOOL` runs first), then skips the jump. The server uses the result and later corrects the psprite. `CallACS` / `ACS_NamedExecuteWithResult` in that expression therefore cannot steer the local weapon instantly.
+
+`CLIENTSIDE` ACS is useless as an `A_JumpIf` condition: on the server, `ACS_ExecuteWithResult` does not run those scripts and returns **false**, so the jump never happens.
+
+```cpp
+// WRONG — client skips the jump; fire/HUD logic is a ping behind
+Fire:
+    TNT1 A 0 A_JumpIf(CallACS("my_check"), "DoFire")
+    goto Ready
+
+// CORRECT — inventory checks can use A_JumpIfInventory on the local weapon
+Fire:
+    TNT1 A 0 A_JumpIfInventory("MyAmmo", 1, "DoFire")
+    goto Ready
+```
+
+For ACS conditions that must be server-authoritative, use a non-`CLIENTSIDE` script and accept the delayed correction (or the `A_Jump(256,2)` / `wait` buffer above).
+
+## `CustomInventory` cannot spawn `+CLIENTSIDEONLY` actors online (server never creates them)
+
+`NETWORK_ShouldActorNotBeSpawned` skips the spawn on the server when the spawn type (or `SXF_CLIENTSIDE`) is client-only. CustomInventory `Pickup`/`Use` runs via `CallStateChain` with `self` = **owner**, who is not `CLIENTSIDEONLY`, so the server drops the spawn.
+
+Clients only re-run that chain when they themselves `CallTryPickup` / `UseInventory`. A Pickup-only CustomInventory (no `Use` state) `GoAwayAndDie`s on the server and is not given to the client, so Pickup never runs there either. The FX never appears online.
+
+```cpp
+// WRONG — server skips the CSO spawn; world Pickup-only items never re-run on the client
+actor SpawnMyFX : CustomInventory
+{
+    States
+    {
+    Pickup:
+        TNT1 A 0 A_SpawnItemEx("MyClientFX", 0, 0, 0)
+        stop
+    }
+}
+
+actor MyClientFX
+{
+    +CLIENTSIDEONLY
+    // …
+}
+
+// CORRECT — spawn CSO FX from a weapon psprite (client predicts A_SpawnItemEx)
+Fire:
+    TNT1 A 0 A_SpawnItemEx("MyClientFX", 0, 0, 0, 0, 0, 0, 0, SXF_CLIENTSIDE)
+```
+
+Spawn `+CLIENTSIDEONLY` from the weapon layer or from an actor that is already `CLIENTSIDEONLY`, not from CustomInventory.
+
+## `CustomInventory` Give/Take syncs inventory to clients (weapon Give/Take does not)
+
+`A_GiveInventory` / `A_TakeInventory` from a **weapon/flash** psprite set `bNeedClientUpdate = false`: both sides predict, the server does **not** send `GiveInventory`. Predicted ammo/HUD can drift.
+
+The same calls from CustomInventory `Pickup`/`Use` (`CallStateChain`, `statecall != NULL`) are **not** psprite calls, so the server sends `GiveInventoryNotOverwritingAmount` / `TakeInventory` with the owner's real amount. A net-zero Give+Take still overwrites the client's count — that is the ammo-bar resync trick:
+
+```cpp
+actor ResyncMyAmmo : CustomInventory
+{
+    States
+    {
+    Pickup:
+        TNT1 A 0 A_GiveInventory("GenericAmmo", 1)
+        TNT1 A 0 A_TakeInventory("GenericAmmo", 1)
+        stop
+    }
+}
+```
+
+Give this item (from ACS, another CustomInventory, etc.) when the bar is desynced. Do not expect the same Give+Take on a weapon state to repair the bar.

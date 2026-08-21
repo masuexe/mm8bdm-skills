@@ -68,7 +68,7 @@ Player-facing wiki pages (install, online play, FAQ, maps list) are **not** bund
 
 ## Engine language traps
 
-For empty `{}`, `CheckInventory` in DECORATE, 0-tic loops, Spawn dummy frames, lump 8-char names, and no-ZScript rules, use the **zandronum-modding** skill.
+For empty `{}`, `CheckInventory` in DECORATE, 0-tic loops, Spawn dummy frames, lump 8-char names, no-ZScript rules, `A_Jump*` online desync, and `CustomInventory` / `CLIENTSIDEONLY` net rules, use the **zandronum-modding** skill.
 
 ## Maintainers: refresh wiki snapshot
 
