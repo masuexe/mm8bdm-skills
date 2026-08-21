@@ -47,6 +47,31 @@ goto DeselectInstant
 
 The same rule applies to `loop` / `wait` / `stop` / `fail`: never append them after duration (and optional action) on one line. Standalone control lines also do **not** consume `A_Jump*` relative offsets (see below).
 
+## Do not name state labels `Loop` / `Wait` / `Stop` / `Fail` / `Goto`
+
+State control keywords are reserved. A **label** with the same name (case-insensitive) is not a normal state name — the parser treats the token as a control keyword / mis-parses the next line and reports:
+
+`Sprite names must be exactly 4 characters`
+
+```cpp
+// WRONG — label "Loop" collides with keyword loop
+Spawn:
+    TNT1 A 0
+Loop:
+    TNT1 A 1 ACS_NamedExecuteAlways("uh_radiuspull", 0, 10, 128, 0)
+    goto Loop
+
+// CORRECT — use a non-keyword label
+Spawn:
+    TNT1 A 0
+    goto AuraTick
+AuraTick:
+    TNT1 A 1 ACS_NamedExecuteAlways("uh_radiuspull", 0, 10, 128, 0)
+    goto AuraTick
+```
+
+Same ban for labels named `Wait`, `Stop`, `Fail`, or `Goto`. Prefer descriptive names (`AuraTick`, `SpawnLoop`, `DoT`).
+
 ## `A_Jump*` label targets need a sprite frame — not bare `stop`
 
 A state label that is only a control keyword (`stop` / `goto` / …) is **not** a valid `A_Jump*` / `A_JumpIf*` destination. The engine reports `Jump target 'Label' not found in ActorName`.

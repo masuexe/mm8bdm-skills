@@ -70,6 +70,8 @@ DECORATE uses `FScanner` with **CMode**. Among printable ASCII, an unquoted labe
 
 **Not** allowed: space, `"`, and punctuation in the CMode stop set (including `-`, `$`, `#`, etc.).
 
+Also do **not** use state control keywords as label names (`Loop`, `Wait`, `Stop`, `Fail`, `Goto` — case-insensitive). That yields `Sprite names must be exactly 4 characters` (see [decorate-gotchas.md](decorate-gotchas.md)).
+
 Separators (not part of a segment):
 
 | Token | Role |

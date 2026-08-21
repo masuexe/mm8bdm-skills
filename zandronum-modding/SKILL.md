@@ -33,6 +33,7 @@ Do **not** use ZScript or post-2.8pre / post-GZDoom-1.8.6 language features. If 
 - Inventory flags used by a weapon must be defined in this mod (or an earlier-loaded PK3); do not assume another wad’s `UOnce` flags exist.
 - `CheckInventory` is ACS-only — use `A_JumpIfInventory` / `CallACS` in DECORATE.
 - `goto` / `loop` / `wait` / `stop` / `fail` must be on their own line.
+- Do not name state labels `Loop` / `Wait` / `Stop` / `Fail` / `Goto` — reserved keywords; causes `Sprite names must be exactly 4 characters`.
 - `A_Jump*` labels need a sprite frame before bare `stop` — else `Jump target 'X' not found`.
 - No all-0-tic state loops (crashes the engine).
 - Spawn state's first frame action never runs — lead with a dummy `TNT1 A 0`.
