@@ -43,6 +43,8 @@ ACC does **not** require `.acs` if the caller already passes a name with an exte
 
 ACC searches its **own executable directory** for standard libraries (`zcommon.acs`). Include path resolution must add the ACC directory. Nested project includes also need the source tree (and often its subdirectories).
 
+ACS type traps (`int + 0.1` is not `N.1`, `#import` vs `#define`) are in [acs-gotchas.md](acs-gotchas.md).
+
 ## DECORATE state labels (engine string rules)
 
 Source of truth: Zandronum `thingdef_states.cpp` (`ParseStateString`), `p_states.cpp`, `sc_man_scanner.re` (DECORATE **CMode**), `thingdef_parse.cpp` (state args `'L'`/`'l'`).

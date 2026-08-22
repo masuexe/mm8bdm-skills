@@ -2,10 +2,12 @@
 name: zandronum-modding
 description: >-
   Correct Zandronum DECORATE and ACS authoring for Zandronum-only mods (no ZScript).
-  Covers DECORATE gotchas, special lump naming, state labels, and ACC include rules.
+  Covers DECORATE gotchas, ACS int vs fixed (no promotion), HudMessage vs SBARINFO
+  coords, special lump naming, state labels, and ACC include rules.
   Use when writing or reviewing DECORATE, ACS, LOADACS, KEYCONF, SNDINFO, TEXTURES,
   or any Zandronum PK3 lump; when the user mentions Zandronum, DECORATE states,
-  A_Jump*, Offset, Spawn, ACC, CustomInventory, CLIENTSIDEONLY, or online desync.
+  A_Jump*, Offset, Spawn, ACC, HudMessage, fixed, CustomInventory, CLIENTSIDEONLY,
+  or online desync.
 ---
 
 # Zandronum Modding
@@ -24,6 +26,7 @@ Do **not** use ZScript or post-2.8pre / post-GZDoom-1.8.6 language features. If 
 | Topic | File |
 |-------|------|
 | DECORATE parse/runtime traps | [references/decorate-gotchas.md](references/decorate-gotchas.md) |
+| ACS types, HudMessage coords, `#import` | [references/acs-gotchas.md](references/acs-gotchas.md) |
 | Lump names, state labels, ACC paths | [references/lumps-and-labels.md](references/lumps-and-labels.md) |
 
 ## Quick checklist
@@ -41,6 +44,9 @@ Do **not** use ZScript or post-2.8pre / post-GZDoom-1.8.6 language features. If 
 - Most `A_Jump*` skip on the client (not `A_JumpIfInventory` on the local weapon); `CallACS` in `A_JumpIf` is RTT-delayed.
 - Do not spawn `+CLIENTSIDEONLY` from `CustomInventory` online; Give/Take from CustomInventory *does* sync ammo to clients.
 - Special lumps: basename without last extension → uppercase → max 8 chars (`DECORATE.txt` → `DECORATE`).
+- ACS does **not** promote `int + 0.1` to `N.1` — use `(n * 1.0) + 0.1` or a `256.1` literal (`HudMessage` / BARLIB). See [acs-gotchas.md](references/acs-gotchas.md).
+- SBARINFO `fullscreenoffsets` negative X is from the **right**; `SetHudSize(320,200)` `HudMessage` X is from the **left** (`-64` → `256`).
+- `#import` does not export `#define`; duplicate macros needed for local array sizes.
 
 ## MM8BDM-specific APIs
 

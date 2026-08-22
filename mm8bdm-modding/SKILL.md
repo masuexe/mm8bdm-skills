@@ -46,7 +46,7 @@ Paths are relative to this skill root.
 | Custom / CBM weapon | [references/additional-guides-7149f7a8/custom-weapons-with-cbm-d7343e16.md](references/additional-guides-7149f7a8/custom-weapons-with-cbm-d7343e16.md), [basemm8bdmcustwep-d23769c5.md](references/decorate-actor-reference-2fdd3e69/basemm8bdmcustwep-d23769c5.md) |
 | New player class | [references/interacting-with-systems-c99b6cab/creating-classes-5863e4dc.md](references/interacting-with-systems-c99b6cab/creating-classes-5863e4dc.md), [classbase-c7f9de44.md](references/decorate-actor-reference-2fdd3e69/classbase-c7f9de44.md); CBM: [custom-classes-with-cbm-2196ad22.md](references/additional-guides-7149f7a8/custom-classes-with-cbm-2196ad22.md) |
 | Call existing ACS | [references/acs-script-reference-cf6aec3f/README.md](references/acs-script-reference-cf6aec3f/README.md) then the matching `core*.md` page (signature, params, caveats) |
-| HUD / ammo bars | BARLIB pages under [references/interacting-with-systems-c99b6cab/](references/interacting-with-systems-c99b6cab/) |
+| HUD / ammo bars | BARLIB pages under [references/interacting-with-systems-c99b6cab/](references/interacting-with-systems-c99b6cab/). Coords are ACS **fixed**; `int + 0.1` does not promote — see **zandronum-modding** `references/acs-gotchas.md` |
 | Assist display | ASSTLIB pages in the same folder |
 | Projectiles / FX bases | [references/decorate-actor-reference-2fdd3e69/README.md](references/decorate-actor-reference-2fdd3e69/README.md) |
 | First DECORATE / ACS tutorial | [decorate-the-world-57ad7756.md](references/starting-guides-77c9d72f/decorate-the-world-57ad7756.md), [hello-acs-447542af.md](references/starting-guides-77c9d72f/hello-acs-447542af.md) (ignore SLADE screenshot steps; keep `#library` / LOADACS rules) |
@@ -68,7 +68,7 @@ Player-facing wiki pages (install, online play, FAQ, maps list) are **not** bund
 
 ## Engine language traps
 
-For empty `{}`, `CheckInventory` in DECORATE, 0-tic loops, Spawn dummy frames, lump 8-char names, no-ZScript rules, `A_Jump*` online desync, and `CustomInventory` / `CLIENTSIDEONLY` net rules, use the **zandronum-modding** skill.
+For empty `{}`, `CheckInventory` in DECORATE, 0-tic loops, Spawn dummy frames, lump 8-char names, no-ZScript rules, `A_Jump*` online desync, `CustomInventory` / `CLIENTSIDEONLY` net rules, and **ACS int vs fixed / HudMessage vs SBARINFO coords**, use the **zandronum-modding** skill (`references/acs-gotchas.md`).
 
 ## Maintainers: refresh wiki snapshot
 
