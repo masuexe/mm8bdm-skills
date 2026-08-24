@@ -21,6 +21,10 @@ Do **not** use ZScript or post-2.8pre / post-GZDoom-1.8.6 language features. If 
 1. Prefer engine / ACC source over generic Doom or GZDoom wiki memory.
 2. Read the matching reference below before inventing syntax.
 
+## MCP runtime testing
+
+For engine-backed MCP or runtime tests, prefer the newest locally available Zandronum build. Nightly and alpha builds are valid choices. Do not use a version older than 3.2.1 unless the user explicitly requests an older-version regression test. When the installed version is uncertain, verify it before testing.
+
 ## References (read on demand)
 
 | Topic | File |

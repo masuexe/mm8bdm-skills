@@ -36,6 +36,17 @@ TID constants: prefer `8BDMDEFS.acs` in the loaded base (`PLN_TID` etc.), not th
 
 Empty `Inventory` subclasses are boolean flags on players — a common MM8BDM pattern.
 
+## Runtime load order
+
+For MM8BDM runtime tests, preserve this load order:
+
+0. `megagame.wad` as the IWAD
+1. Exactly one base-game package whose filename follows the `mm8bdm-vXY` form, such as `mm8bdm-v6a.pk3` or `mm8bdm-v6b.pk3`
+2. If the base game is `mm8bdm-v6b.pk3`, load `8bdm-v6b-miscfixes-v5.pk3` immediately after it
+3. Addons and the mod under test
+
+Treat the v6b fixes as mandatory for v6b testing. Keep machine-specific absolute paths in the project instructions rather than this skill.
+
 ## Task → read these first
 
 Paths are relative to this skill root.
