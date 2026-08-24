@@ -53,7 +53,8 @@ Paths are relative to this skill root.
 
 | Task | Read |
 |------|------|
-| New weapon | [references/interacting-with-systems-c99b6cab/creating-weapons-bf312efa.md](references/interacting-with-systems-c99b6cab/creating-weapons-bf312efa.md), [references/decorate-actor-reference-2fdd3e69/basemm8bdmwep-8cc600ca.md](references/decorate-actor-reference-2fdd3e69/basemm8bdmwep-8cc600ca.md); then [defineweapon-6a4db7e0.md](references/interacting-with-systems-c99b6cab/defineweapon-6a4db7e0.md) if registering |
+| New weapon | [references/interacting-with-systems-c99b6cab/creating-weapons-bf312efa.md](references/interacting-with-systems-c99b6cab/creating-weapons-bf312efa.md), [references/decorate-actor-reference-2fdd3e69/basemm8bdmwep-8cc600ca.md](references/decorate-actor-reference-2fdd3e69/basemm8bdmwep-8cc600ca.md); then [defineweapon-6a4db7e0.md](references/interacting-with-systems-c99b6cab/defineweapon-6a4db7e0.md) if registering, and [weapon-release-checklist.md](references/weapon-release-checklist.md) before release |
+| Review / test a weapon | [references/weapon-release-checklist.md](references/weapon-release-checklist.md), [references/rage-rune-psprite.md](references/rage-rune-psprite.md), and **zandronum-modding** `references/decorate-gotchas.md` for state liveness and online psprite behavior |
 | Custom / CBM weapon | [references/additional-guides-7149f7a8/custom-weapons-with-cbm-d7343e16.md](references/additional-guides-7149f7a8/custom-weapons-with-cbm-d7343e16.md), [basemm8bdmcustwep-d23769c5.md](references/decorate-actor-reference-2fdd3e69/basemm8bdmcustwep-d23769c5.md) |
 | New player class | [references/interacting-with-systems-c99b6cab/creating-classes-5863e4dc.md](references/interacting-with-systems-c99b6cab/creating-classes-5863e4dc.md), [classbase-c7f9de44.md](references/decorate-actor-reference-2fdd3e69/classbase-c7f9de44.md); CBM: [custom-classes-with-cbm-2196ad22.md](references/additional-guides-7149f7a8/custom-classes-with-cbm-2196ad22.md) |
 | Call existing ACS | [references/acs-script-reference-cf6aec3f/README.md](references/acs-script-reference-cf6aec3f/README.md) then the matching `core*.md` page (signature, params, caveats) |
@@ -63,6 +64,13 @@ Paths are relative to this skill root.
 | First DECORATE / ACS tutorial | [decorate-the-world-57ad7756.md](references/starting-guides-77c9d72f/decorate-the-world-57ad7756.md), [hello-acs-447542af.md](references/starting-guides-77c9d72f/hello-acs-447542af.md) (ignore SLADE screenshot steps; keep `#library` / LOADACS rules) |
 | Mapping specials | [references/mapping-reference-3fe89cb4/README.md](references/mapping-reference-3fe89cb4/README.md) |
 | Rage / double fire speed timing | [references/rage-rune-psprite.md](references/rage-rune-psprite.md) |
+
+## Hand-maintained references
+
+| Topic | File |
+|-------|------|
+| Weapon review and regression testing | [references/weapon-release-checklist.md](references/weapon-release-checklist.md) |
+| Rage rune psprite timing | [references/rage-rune-psprite.md](references/rage-rune-psprite.md) |
 
 ## Reference index (vendored wiki)
 
