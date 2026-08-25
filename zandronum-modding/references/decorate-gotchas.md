@@ -197,6 +197,34 @@ So `Offset(0, 42)` after `Offset(2, 46)` leaves **sx = 2** (only sy becomes 42).
 
 To force absolute ready position `(sx=0, sy=WEAPONTOP)`, call `A_WeaponReady` **without** `WRF_NoBob` so `DoReadyWeaponToBob` runs. `A_WeaponReady(14)` (`14 = NoSwitch|NoFire`) still resets psprite coords.
 
+## Converting composite `TEXTURES` offsets to weapon `Offset`
+
+When replacing a first-person composite sprite with its base sprite plus a DECORATE `Offset`, do not use the target `TEXTURES` offset minus the base offset directly. In this MM8BDM weapon layout, the weapon psprite uses the opposite displacement and starts from the default Y coordinate 32.
+
+For a base composite `B` and a target composite `T`, when the base frame is shown at the normal weapon position:
+
+```text
+weapon X = B.texture X - T.texture X
+weapon Y = 32 + B.texture Y - T.texture Y
+```
+
+For example, `6H59I0` has `(-268, 46)` and `6H59J0` has `(-198, 4)`, so replacing J with I requires:
+
+```cpp
+6H59 I 1 Offset(-70, 74)
+```
+
+The corresponding Eden hand animation values are:
+
+```text
+J/K = (-70, 74), (-121, 114)
+M/N = (-25, 56), (-33, 84)
+P/Q = (70, 74), (121, 114)
+S/T = (25, 56), (33, 84)
+```
+
+The earlier wrong conversion used `T - B`, producing `(70, -42)` for J. If an animation switches from an offset base group to another base group, reset the psprite first with `A_WeaponReady(14)`; `Offset(0, y)` does not clear the previous X coordinate.
+
 ## Weapon `Flash` shares weapon `sx`/`sy` every tic
 
 At the end of `P_MovePsprites`, Zandronum copies weapon coords onto the flash layer:
