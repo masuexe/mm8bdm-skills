@@ -25,6 +25,25 @@ Do **not** use ZScript or post-2.8pre / post-GZDoom-1.8.6 language features. If 
 
 For engine-backed MCP or runtime tests, prefer the newest locally available Zandronum build. Nightly and alpha builds are valid choices. Do not use a version older than 3.2.1 unless the user explicitly requests an older-version regression test. When the installed version is uncertain, verify it before testing.
 
+### Fast bridge-debug loop
+
+When the repository provides a launch-profile JSON, set
+`ZANDRONUM_LAUNCH_PROFILES` to that file and use the profile that contains the
+smallest valid load order for the first iteration. Call `launch_instance` with
+the profile name, reproduce one action, then inspect state with
+`actor_state`, `wait_for_actor`, or `actors_near`. Use `read_engine_log` with
+the returned `nextCursor` for incremental diagnostics; use
+`get_startup_errors` when startup fails before the bridge opens. Reserve a full
+addon/debug profile for the final integration pass. This avoids repeatedly
+relaunching a large MM8BDM stack and makes DECORATE/ACS failures visible in the
+same tool call that reports the failed launch.
+
+The actor-state bridge fields are useful for projectile/render bugs: check TID,
+alpha, render style, scale, size, velocity, and target/master/tracer pointers
+before relying on a screenshot. A profile is project-specific, so keep its
+paths and exact package order in the project instructions or a tracked profile
+file rather than copying machine-specific paths into this skill.
+
 ## References (read on demand)
 
 | Topic | File |

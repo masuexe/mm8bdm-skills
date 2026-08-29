@@ -47,6 +47,15 @@ For MM8BDM runtime tests, preserve this load order:
 
 Treat the v6b fixes as mandatory for v6b testing. Keep machine-specific absolute paths in the project instructions rather than this skill.
 
+For repeated MCP iterations, prefer the project's tracked v6b smoke launch
+profile over manually rebuilding the long command line. Start with the smoke
+profile, reproduce the smallest weapon/class action, and inspect
+`wait_for_actor`/`actor_state` (including alpha and render-style fields) plus
+`read_engine_log`. Switch to the full profile only after the focused case is
+clean; this keeps optional HUD, hit-voxel, and radio packages from obscuring a
+DECORATE/ACS regression. The profile must still follow the load order above:
+IWAD, one `mm8bdm-v6b` base package, the v6b misc-fixes package, then addons.
+
 ## Task → read these first
 
 Paths are relative to this skill root.
