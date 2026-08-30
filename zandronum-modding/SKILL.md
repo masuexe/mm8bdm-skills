@@ -21,28 +21,18 @@ Do **not** use ZScript or post-2.8pre / post-GZDoom-1.8.6 language features. If 
 1. Prefer engine / ACC source over generic Doom or GZDoom wiki memory.
 2. Read the matching reference below before inventing syntax.
 
-## MCP runtime testing
+## Engine MCP (default off)
 
-For engine-backed MCP or runtime tests, prefer the newest locally available Zandronum build. Nightly and alpha builds are valid choices. Do not use a version older than 3.2.1 unless the user explicitly requests an older-version regression test. When the installed version is uncertain, verify it before testing.
+Do **not** call Zandronum MCP for ordinary DECORATE/ACS authoring or review. Gotchas, workspace source, and ACC are enough.
 
-### Fast bridge-debug loop
+**Allowed** only when:
 
-When the repository provides a launch-profile JSON, set
-`ZANDRONUM_LAUNCH_PROFILES` to that file and use the profile that contains the
-smallest valid load order for the first iteration. Call `launch_instance` with
-the profile name, reproduce one action, then inspect state with
-`actor_state`, `wait_for_actor`, or `actors_near`. Use `read_engine_log` with
-the returned `nextCursor` for incremental diagnostics; use
-`get_startup_errors` when startup fails before the bridge opens. Reserve a full
-addon/debug profile for the final integration pass. This avoids repeatedly
-relaunching a large MM8BDM stack and makes DECORATE/ACS failures visible in the
-same tool call that reports the failed launch.
+- the user explicitly asked to launch or test in-engine, or
+- text cannot prove the issue: parse/startup failure, or a runtime-only symptom (psprite, projectile liveness, alpha/render style, net desync).
 
-The actor-state bridge fields are useful for projectile/render bugs: check TID,
-alpha, render style, scale, size, velocity, and target/master/tracer pointers
-before relying on a screenshot. A profile is project-specific, so keep its
-paths and exact package order in the project instructions or a tracked profile
-file rather than copying machine-specific paths into this skill.
+**Forbidden:** probing engine version “just in case”; launching after an edit to confirm it; screenshot loops; a full addon/debug profile unless a focused case already passed.
+
+**If allowed:** newest local Zandronum (not older than 3.2.1 unless the user requested an older regression). One launch, smallest tracked profile (`ZANDRONUM_LAUNCH_PROFILES` when the repo has one), one action, then `actor_state` / `wait_for_actor` / `actors_near` / `read_engine_log` / `get_startup_errors` as needed; stop when the answer is clear. Keep machine-specific paths in the project, not this skill.
 
 ## References (read on demand)
 

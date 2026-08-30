@@ -38,23 +38,16 @@ Empty `Inventory` subclasses are boolean flags on players — a common MM8BDM pa
 
 ## Runtime load order
 
-For MM8BDM runtime tests, preserve this load order:
+Do not launch the engine to confirm a static DECORATE/ACS change. Engine MCP follows **zandronum-modding** (default off).
+
+**If a launch is already allowed**, preserve this load order:
 
 0. `megagame.wad` as the IWAD
 1. Exactly one base-game package whose filename follows the `mm8bdm-vXY` form, such as `mm8bdm-v6a.pk3` or `mm8bdm-v6b.pk3`
 2. If the base game is `mm8bdm-v6b.pk3`, load `8bdm-v6b-miscfixes-v5.pk3` immediately after it
 3. Addons and the mod under test
 
-Treat the v6b fixes as mandatory for v6b testing. Keep machine-specific absolute paths in the project instructions rather than this skill.
-
-For repeated MCP iterations, prefer the project's tracked v6b smoke launch
-profile over manually rebuilding the long command line. Start with the smoke
-profile, reproduce the smallest weapon/class action, and inspect
-`wait_for_actor`/`actor_state` (including alpha and render-style fields) plus
-`read_engine_log`. Switch to the full profile only after the focused case is
-clean; this keeps optional HUD, hit-voxel, and radio packages from obscuring a
-DECORATE/ACS regression. The profile must still follow the load order above:
-IWAD, one `mm8bdm-v6b` base package, the v6b misc-fixes package, then addons.
+Treat the v6b fixes as mandatory for v6b testing. Prefer the project's tracked smoke profile over a full addon stack. Keep machine-specific absolute paths in the project instructions rather than this skill.
 
 ## Task → read these first
 
@@ -63,7 +56,7 @@ Paths are relative to this skill root.
 | Task | Read |
 |------|------|
 | New weapon | [references/interacting-with-systems-c99b6cab/creating-weapons-bf312efa.md](references/interacting-with-systems-c99b6cab/creating-weapons-bf312efa.md), [references/decorate-actor-reference-2fdd3e69/basemm8bdmwep-8cc600ca.md](references/decorate-actor-reference-2fdd3e69/basemm8bdmwep-8cc600ca.md); then [defineweapon-6a4db7e0.md](references/interacting-with-systems-c99b6cab/defineweapon-6a4db7e0.md) if registering, and [weapon-release-checklist.md](references/weapon-release-checklist.md) before release |
-| Review / test a weapon | [references/weapon-release-checklist.md](references/weapon-release-checklist.md), [references/rage-rune-psprite.md](references/rage-rune-psprite.md), and **zandronum-modding** `references/decorate-gotchas.md` for state liveness and online psprite behavior |
+| Review / test a weapon | Static pass: [references/weapon-release-checklist.md](references/weapon-release-checklist.md), [references/rage-rune-psprite.md](references/rage-rune-psprite.md), and **zandronum-modding** `references/decorate-gotchas.md`. Do not launch the engine unless MCP is allowed there. |
 | Custom / CBM weapon | [references/additional-guides-7149f7a8/custom-weapons-with-cbm-d7343e16.md](references/additional-guides-7149f7a8/custom-weapons-with-cbm-d7343e16.md), [basemm8bdmcustwep-d23769c5.md](references/decorate-actor-reference-2fdd3e69/basemm8bdmcustwep-d23769c5.md) |
 | New player class | [references/interacting-with-systems-c99b6cab/creating-classes-5863e4dc.md](references/interacting-with-systems-c99b6cab/creating-classes-5863e4dc.md), [classbase-c7f9de44.md](references/decorate-actor-reference-2fdd3e69/classbase-c7f9de44.md); CBM: [custom-classes-with-cbm-2196ad22.md](references/additional-guides-7149f7a8/custom-classes-with-cbm-2196ad22.md) |
 | Call existing ACS | [references/acs-script-reference-cf6aec3f/README.md](references/acs-script-reference-cf6aec3f/README.md) then the matching `core*.md` page (signature, params, caveats) |

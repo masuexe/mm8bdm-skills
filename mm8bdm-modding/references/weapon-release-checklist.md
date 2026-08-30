@@ -1,11 +1,21 @@
 # MM8BDM v6b weapon pre-release checklist
 
-Use this after a weapon works in a simple offline test. The first pass should
-focus on state/actor liveness and online synchronization; those failures are
-usually the most costly to diagnose. Items marked **advanced** are conditional
-and may not apply to a simple weapon. Use the
-[documented runtime load order](../SKILL.md#runtime-load-order) for regression
-tests.
+Agent first pass is **static review** against this list and Zandronum
+[DECORATE gotchas](../../zandronum-modding/references/decorate-gotchas.md)
+(states, 0-tic loops, flags, `DefineWeapon`). Do not launch Zandronum MCP to
+work through this checklist unless the user asked to test, or a runtime-only
+symptom cannot be judged from the source.
+
+Map, dedicated-server, and two-client items are human playtests or an
+explicitly allowed engine session — not a default agent loop.
+
+If a launch is already allowed, use the
+[documented runtime load order](../SKILL.md#runtime-load-order).
+
+The first pass should still prioritize state/actor liveness and online
+synchronization in the *source*; those failures are usually the most costly
+to diagnose. Items marked **advanced** are conditional and may not apply to a
+simple weapon.
 
 This is a reviewed and reorganized adaptation of StardustMotion's
 [Ultimate New Weapon Checklist (v6b)](https://gist.github.com/StardustMotion/278531046b736b84f637fbfeaba830e6),
