@@ -21,6 +21,21 @@ Do **not** use ZScript or post-2.8pre / post-GZDoom-1.8.6 language features. If 
 1. Prefer engine / ACC source over generic Doom or GZDoom wiki memory.
 2. Read the matching reference below before inventing syntax.
 
+## ACC executable selection
+
+When compiling ACS from WSL, prefer a native Linux ACC executable. Resolve it
+from the project's compiler setting, `PATH` (`command -v acc`), or a native
+installation supplied by the user; verify that the file is executable before
+invoking it. A WSL UNC path such as `\\wsl.localhost\Ubuntu\home\...` is the
+Windows view of a Linux path, so use the corresponding `/home/...` path when
+running from WSL. Keep the ACC executable directory on the include/search path
+so standard libraries such as `zcommon.acs` resolve.
+
+Use Windows `acc.exe` only when the user explicitly requests it or when a
+Windows-specific compatibility comparison is the goal. Do not cross the
+WSL/Windows boundary merely because a Windows compiler is installed; such a
+launch may require sandbox approval.
+
 ## Engine MCP (default off)
 
 Do **not** call Zandronum MCP for ordinary DECORATE/ACS authoring or review. Gotchas, workspace source, and ACC are enough.
