@@ -49,6 +49,16 @@ Do **not** call Zandronum MCP for ordinary DECORATE/ACS authoring or review. Got
 
 **If allowed:** newest local Zandronum (not older than 3.2.1 unless the user requested an older regression). One launch, smallest tracked profile (`ZANDRONUM_LAUNCH_PROFILES` when the repo has one), one action, then `actor_state` / `wait_for_actor` / `actors_near` / `read_engine_log` / `get_startup_errors` as needed; stop when the answer is clear. Keep machine-specific paths in the project, not this skill.
 
+## Reusable project tooling
+
+When a project provides a documented `tools/` or `scripts/` wrapper for a
+repeatable check, prefer that wrapper instead of rewriting a temporary program.
+Keep one-off experiments in `/tmp`. Put implementation in the script and keep
+this skill limited to routing rules; project instructions should contain only
+the command, inputs, compact output shape, and safety notes. Prefer argument or
+environment-based paths, non-zero failure codes, concise stdout, `--dry-run`
+for mutating helpers, and automatic cleanup for launched processes.
+
 ## References (read on demand)
 
 | Topic | File |
