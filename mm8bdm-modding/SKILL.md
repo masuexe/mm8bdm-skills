@@ -21,6 +21,21 @@ Bundled docs live under [references/](references/) (relative to this skill). **R
 3. This skill's wiki snapshots in `references/`
 4. Never treat GZDoom or ZScript wiki as MM8BDM authority
 
+## External research routing
+
+Use external search only when the workspace sources, engine/ACC source, and
+bundled references do not settle the question. Search narrowly (prefer a
+`site:` query and one relevant source first); do not search every site for
+every edit. Treat posts, snippets, and public repositories as leads to verify
+against the target Zandronum version, current MM8BDM files, and load order.
+
+| Question | Search first | Use with care |
+|----------|--------------|--------------|
+| MM8BDM-specific APIs, addon conventions, or project history | [MM8BDM forum](https://mm8bdm.net/forum) | Older threads may target a different MM8BDM release; current files win |
+| Zandronum DECORATE/ACS compatibility, multiplayer behavior, or engine-specific workarounds | [Zandronum forum](https://zandronum.com/forum) | Confirm claims against Zandronum/ACC source |
+| Generic ACS/DECORATE syntax or examples | [ZDoom Wiki](https://zdoom.org/w/index.php?title=Category:Sample_ACS_functions), then [ZDoom forum](https://forum.zdoom.org/) | Filter out GZDoom/ZScript-only features and re-check Zandronum support |
+| Cross-project implementation patterns | GitHub public repositories | Check engine/version, commit age, license, and PK3 load order before reusing code |
+
 ## Include layout (mod ACS)
 
 Typical addon ACS trees mirror the base game:
