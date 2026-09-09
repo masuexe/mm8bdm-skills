@@ -3,11 +3,12 @@ name: zandronum-modding
 description: >-
   Correct Zandronum DECORATE and ACS authoring for Zandronum-only mods (no ZScript).
   Covers DECORATE gotchas, ACS int vs fixed (no promotion), HudMessage vs SBARINFO
-  coords, special lump naming, state labels, and ACC include rules.
+  coords, special lump naming, state labels, ACC include rules, and case sensitivity
+  (names mostly insensitive; ACS string contents sensitive).
   Use when writing or reviewing DECORATE, ACS, LOADACS, KEYCONF, SNDINFO, TEXTURES,
   or any Zandronum PK3 lump; when the user mentions Zandronum, DECORATE states,
   A_Jump*, Offset, Spawn, ACC, HudMessage, fixed, CustomInventory, CLIENTSIDEONLY,
-  or online desync.
+  case sensitivity, StrCmp, StrICmp, or online desync.
 ---
 
 # Zandronum Modding
@@ -66,9 +67,11 @@ for mutating helpers, and automatic cleanup for launched processes.
 | DECORATE parse/runtime traps | [references/decorate-gotchas.md](references/decorate-gotchas.md) |
 | ACS types, HudMessage coords, `#import` | [references/acs-gotchas.md](references/acs-gotchas.md) |
 | Lump names, state labels, ACC paths | [references/lumps-and-labels.md](references/lumps-and-labels.md) |
+| Case sensitivity (names vs string contents) | [references/case-sensitivity.md](references/case-sensitivity.md) |
 
 ## Quick checklist
 
+- Names (actors, scripts, states, inventory types, textures, sounds, LANGUAGE keys) are **case-insensitive**; ACS string **contents** and `StrCmp` are **case-sensitive** (`StrICmp` when casing must not matter). See [case-sensitivity.md](references/case-sensitivity.md).
 - Empty inherit-only actors still need `{}`.
 - Extra `}` between actors → `Expected '{', got 'actor'` — balance braces after multi-actor edits.
 - Inventory flags used by a weapon must be defined in this mod (or an earlier-loaded PK3); do not assume another wad’s `UOnce` flags exist.

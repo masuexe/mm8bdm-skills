@@ -59,7 +59,7 @@ Do not launch the engine to confirm a static DECORATE/ACS change. Engine MCP fol
 
 0. `megagame.wad` as the IWAD
 1. Exactly one base-game package whose filename follows the `mm8bdm-vXY` form, such as `mm8bdm-v6a.pk3` or `mm8bdm-v6b.pk3`
-2. If the base game is `mm8bdm-v6b.pk3`, load `8bdm-v6b-miscfixes-v5.pk3` immediately after it
+2. If the base game is `mm8bdm-v6b.pk3`, load `8bdm-v6b-miscfixes-v6.pk3` immediately after it
 3. Addons and the mod under test
 
 Treat the v6b fixes as mandatory for v6b testing. Prefer the project's tracked smoke profile over a full addon stack. Keep machine-specific absolute paths in the project instructions rather than this skill.
@@ -104,7 +104,7 @@ Player-facing wiki pages (install, online play, FAQ, maps list) are **not** bund
 
 ## Engine language traps
 
-For empty `{}`, `CheckInventory` in DECORATE, 0-tic loops, Spawn dummy frames, lump 8-char names, no-ZScript rules, `A_Jump*` online desync, `CustomInventory` / `CLIENTSIDEONLY` net rules, and **ACS int vs fixed / HudMessage vs SBARINFO coords**, use the **zandronum-modding** skill (`references/acs-gotchas.md`).
+For empty `{}`, `CheckInventory` in DECORATE, 0-tic loops, Spawn dummy frames, lump 8-char names, no-ZScript rules, `A_Jump*` online desync, `CustomInventory` / `CLIENTSIDEONLY` net rules, **ACS int vs fixed / HudMessage vs SBARINFO coords**, and **case sensitivity** (names mostly insensitive; ACS string contents sensitive), use the **zandronum-modding** skill (`references/acs-gotchas.md`, `references/case-sensitivity.md`).
 
 ## Maintainers: refresh wiki snapshot
 

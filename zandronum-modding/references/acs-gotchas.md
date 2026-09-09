@@ -4,6 +4,8 @@ Engine-correct ACS for ACC / Zandronum. Prefer these over C / GZDoom / ZScript h
 
 ACS has **one** 32-bit cell type. `int`, `bool`, `str`, and `fixed` are the same storage. A decimal literal (`256.1`, `0.1`) is **16.16 fixed** (`value * 65536`). There is **no** automatic promotion when you mix an integer cell with a fixed literal.
 
+ACC lowercases keywords and identifiers before lookup, so `Script`/`script` and `MyVar`/`myvar` are the same. Named scripts and class-name strings are still matched case-insensitively by the engine (`FName`). Quoted string **contents** stay case-sensitive (`"Foo" != "foo"`; use `StrICmp` when needed). Full table: [case-sensitivity.md](case-sensitivity.md).
+
 ## `int + 0.1` does **not** become `N.1`
 
 `HudMessage` / BARLIB `AdjustedImageDisplay` take **fixed** HUD coords (`320.1` = pixel 320, alignment bits in the fraction). Writing `slotX[i] + 0.1` looks like “convert int 256 to 256.1”. ACC does **not** promote the left operand.

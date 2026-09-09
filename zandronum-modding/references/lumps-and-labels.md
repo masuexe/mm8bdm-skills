@@ -65,7 +65,7 @@ DECORATE uses `FScanner` with **CMode**. Among printable ASCII, an unquoted labe
 
 | Allowed | Notes |
 |---------|--------|
-| `A–Z` `a–z` | Letters (case-insensitive at lookup) |
+| `A–Z` `a–z` | Letters (case-insensitive at lookup; see [case-sensitivity.md](case-sensitivity.md)) |
 | `0–9` | Digits; a segment **may start with a digit** |
 | `_` | Underscore |
 | `'` | Apostrophe |
