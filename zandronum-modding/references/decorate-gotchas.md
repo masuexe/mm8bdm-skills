@@ -308,48 +308,85 @@ Ready:
     loop
 ```
 
-## Online: most `A_Jump*` skip on the client — server sends the frame
+## Online: client-side prediction and `A_Jump*` desyncs
 
-For non-`+CLIENTSIDEONLY` actors, `A_Jump`, `A_JumpIf`, `A_JumpIfHealthLower`, … return immediately in client mode and do **not** jump. The server evaluates the jump and, for a weapon/flash psprite, calls `SERVER_HandleWeaponStateJump` (`SetPlayerPSprite` + ammo resync).
+Zandronum operates on a client-server architecture with client-side prediction. Understanding how the engine predicts states is essential to avoiding online desyncs and visual glitches.
 
-Exception: `A_JumpIfInventory` / `A_JumpIfInTargetInventory` **do** evaluate on the local player's weapon/flash psprite. Do not rely on that for other actors' inventory.
+### How Zandronum predicts `A_Jump*`
 
-Until the psprite packet arrives, the client continues as if the jump was false. That is the usual weapon/prop flicker desync.
+1. **Most jumps predict `FALSE` on clients**:
+   For non-`+CLIENTSIDEONLY` actors, `A_Jump`, `A_JumpIf`, `A_JumpIfHealthLower`, and similar functions evaluate on the client but **skip the actual jump** (`NETWORK_InClientMode()` returns immediately). The client predicts that the jump was not taken and proceeds to the next frame. The server evaluates the jump authoritatively and sends the corrected state packet (`SetPlayerPSprite` for weapons, actor state sync for props/monsters).
+2. **Local inventory exception (`A_JumpIfInventory`)**:
+   `A_JumpIfInventory` and `A_JumpIfInTargetInventory` **do** predict locally on the local player's weapon psprites, because the client tracks the local player's inventory. (Do not rely on this for other players or non-player actors, as their full inventory is not synchronized to every client).
+3. **The resulting symptom**:
+   Until the server's update packet arrives (1 full RTT), the client executes the fall-through frames. If the server took the jump, the client snaps to the server's state upon packet arrival, causing a visible flicker or rubberbanding.
 
-### Force the client to wait for the server (weapon)
+### Recommended pattern: Align with prediction (Condition Inversion)
 
-`wait` is not a counted state — it sets the previous frame's `NextState` to itself. Combined with a guaranteed `A_Jump(256, …)` (clients skip it; the server always takes it), the client stays on that 1-tic frame until `SetPlayerPSprite`:
+As clarified by the MM8BDM development team ([Trillster, Post #799](https://mm8bdm.net/forum/post/799) and the official wiki's *DECORATE the World* guide): **do not fight client prediction; work with it**.
+
+Since the client always predicts `A_Jump*` to be false, structure your states so that the **fall-through path is the most likely, continuous action**, and reserve the jump for the infrequent or terminal condition:
 
 ```cpp
-// Client: A_Jump skipped → wait loops this frame.
-// Server: always jumps to offset 2 (the real continuation). Dummy TNT1 is offset 1.
-TNT1 A 1 A_Jump(256, 2)
-wait
-TNT1 A 0
-// … real states …
+// POOR — jumps on the common airborne state; client predicts false and flickers Spawn every frame
+Spawn:
+    EMEG A 0
+    EMEG A 1 A_JumpIf(!CallACS("core_checkfooting"), "Leaping")
+    loop
+Leaping:
+    EMEG B 1
+    ...
+
+// RECOMMENDED (Condition Inversion) — fall-through is the common airborne state; jump only on landing
+Spawn:
+    EMEG A 0
+Leaping:
+    EMEG B 1 A_JumpIf(CallACS("core_checkfooting"), "Landed")
+    loop
+Landed:
+    EMEG A 1
+    goto Leaping
 ```
 
-Packet loss can leave the client stuck on `wait`. Prefer flipping the jump so the common path is the fall-through (see the MM8BDM DECORATE tutorial desync section) when a stuck wait is unacceptable.
+With condition inversion, the client's prediction is correct the vast majority of ticks, producing smooth visuals with negligible server correction.
 
-### `CallACS` inside `A_JumpIf` on a weapon is RTT-delayed
+### Zero-latency weapon checks: Inventory token delegation
 
-`A_JumpIf` still **evaluates** its expression on the client (`ACTION_PARAM_BOOL` runs first), then skips the jump. The server uses the result and later corrects the psprite. `CallACS` / `ACS_NamedExecuteWithResult` in that expression therefore cannot steer the local weapon instantly.
+`A_JumpIf(CallACS("..."))` on a weapon cannot steer local weapon behavior instantaneously because:
+- On the client, `A_JumpIf` skips the jump.
+- `CLIENTSIDE` ACS cannot be used as an `A_JumpIf` condition: the server never executes `CLIENTSIDE` scripts (returns 0), so the server never jumps.
+- Server-side ACS requires a full roundtrip (ping) before the weapon state updates.
 
-`CLIENTSIDE` ACS is useless as an `A_JumpIf` condition: on the server, `ACS_ExecuteWithResult` does not run those scripts and returns **false**, so the jump never happens.
+**Solution**: Use `A_JumpIfInventory` on the weapon psprite. If complex calculation is required, execute ACS in the background to grant or revoke an inventory token, then jump on that token in DECORATE:
 
 ```cpp
-// WRONG — client skips the jump; fire/HUD logic is a ping behind
+// WRONG — client skips jump; weapon fire/HUD lags by player ping
 Fire:
     TNT1 A 0 A_JumpIf(CallACS("my_check"), "DoFire")
     goto Ready
 
-// CORRECT — inventory checks can use A_JumpIfInventory on the local weapon
+// CORRECT — A_JumpIfInventory predicts immediately on the local weapon
 Fire:
-    TNT1 A 0 A_JumpIfInventory("MyAmmo", 1, "DoFire")
+    TNT1 A 0 A_JumpIfInventory("CanFireToken", 1, "DoFire")
     goto Ready
 ```
 
-For ACS conditions that must be server-authoritative, use a non-`CLIENTSIDE` script and accept the delayed correction (or the `A_Jump(256,2)` / `wait` buffer above).
+### Discouraged legacy pattern: The `A_Jump(256, 2) + wait` buffer
+
+A legacy trick historically suggested on forums (e.g. *Zandronum Quirks Thread #191*) used an unconditional jump combined with `wait`:
+
+```cpp
+// DISCOURAGED LEGACY WORKAROUND
+TNT1 A 1 A_Jump(256, 2)
+wait
+TNT1 A 0
+// Continuation...
+```
+
+**Why this is discouraged in modern modding:**
+- `wait` sets `NextState` to the current state, causing the client to loop in place until the server state packet arrives.
+- **Packet loss / high ping vulnerability**: If the server update packet drops or is delayed, the client remains trapped in the `wait` loop indefinitely, causing weapon freezing or harsh stutter.
+- It completely disables client prediction instead of taking advantage of it. Prefer **prediction alignment** or **inventory tokens** whenever possible.
 
 ## `CustomInventory` cannot spawn `+CLIENTSIDEONLY` actors online (server never creates them)
 

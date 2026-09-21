@@ -70,7 +70,7 @@ This project is built upon the collective knowledge and contributions of the MM8
 
 - **Official MM8BDM Wiki**: Documentation snapshots under `mm8bdm-modding/references/` are adapted from the [Official MM8BDM Notion Wiki](https://mm8bdm.notion.site/), authored by Trillster and community contributors.
 - **Weapon Release Checklist**: Adapted with credit to **StardustMotion**'s [Ultimate New Weapon Checklist (v6b)](https://gist.github.com/StardustMotion/278531046b736b84f637fbfeaba830e6).
-- **Zandronum Engine Gotchas & Quirks**: Engine quirks compiled in `zandronum-modding/` draw significant insights from the community's [Zandronum Quirks Thread](https://mm8bdm.net/forum/thread/zandronum-quirks-thread-191) on MM8BDM.net and various research posts.
+- **Zandronum Engine Gotchas & Netcode Patterns**: Compiled in `zandronum-modding/` based on Zandronum source analysis and the [Official MM8BDM Wiki's Netcode Desync Guide](https://mm8bdm.notion.site/DECORATE-the-World-57ad77562c6b489f8217f4e6255e4cf3#37a09dfba2d6405b9e5fa02fa6f24f4b), cross-referenced with community discussions including the [Zandronum Quirks Thread](https://mm8bdm.net/forum/thread/zandronum-quirks-thread-191) and [Trillster's clarification (Post #799)](https://mm8bdm.net/forum/post/799).
 - **Mega Man 8-Bit Deathmatch**: Created by CutmanMike and the MM8BDM Development Team.
 
 

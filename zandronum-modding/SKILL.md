@@ -72,7 +72,7 @@ Do **not** call Zandronum MCP for ordinary DECORATE/ACS authoring or review. Got
 - No all-0-tic state loops (crashes the engine).
 - Spawn state's first frame action never runs — lead with a dummy `TNT1 A 0`.
 - Weapon `Ready` first sprite/frame must exist or `TryPickup` fails.
-- Most `A_Jump*` skip on the client (not `A_JumpIfInventory` on the local weapon); `CallACS` in `A_JumpIf` is RTT-delayed.
+- Most `A_Jump*` predict false on the client; invert conditions so fall-through is the common state, or use `A_JumpIfInventory` on weapons (avoid legacy `A_Jump(256)/wait` buffers).
 - Do not spawn `+CLIENTSIDEONLY` from `CustomInventory` online; Give/Take from CustomInventory *does* sync ammo to clients.
 - Special lumps: basename without last extension → uppercase → max 8 chars (`DECORATE.txt` → `DECORATE`).
 - ACS does **not** promote `int + 0.1` to `N.1` — use `(n * 1.0) + 0.1` or a `256.1` literal (`HudMessage` / BARLIB). See [acs-gotchas.md](references/acs-gotchas.md).

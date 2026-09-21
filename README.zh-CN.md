@@ -66,7 +66,7 @@ node mm8bdm-modding/scripts/sync-wiki.mjs [wiki-output-root]
 
 - **MM8BDM 官方 Wiki**：`mm8bdm-modding/references/` 中的文档快照来自 [MM8BDM 官方 Notion Wiki](https://mm8bdm.notion.site/)，由 Trillster 及社区贡献者编撰。
 - **武器发布核查清单（Checklist）**：参考并改编自 **StardustMotion** 的 [Ultimate New Weapon Checklist (v6b)](https://gist.github.com/StardustMotion/278531046b736b84f637fbfeaba830e6)。
-- **Zandronum 引擎陷阱与特性**：`zandronum-modding/` 中汇总的引擎细节很大程度上受益于 MM8BDM.net 论坛的 [Zandronum Quirks 讨论帖](https://mm8bdm.net/forum/thread/zandronum-quirks-thread-191) 以及社区深入研究成果。
+- **Zandronum 引擎陷阱与网络同步模式**：`zandronum-modding/` 中的引擎与网络预测细节基于 Zandronum 源码验证与 [MM8BDM 官方 Wiki 的网络防不同步教程](https://mm8bdm.notion.site/DECORATE-the-World-57ad77562c6b489f8217f4e6255e4cf3#37a09dfba2d6405b9e5fa02fa6f24f4b)，并结合了社区讨论如 [Zandronum Quirks 讨论帖](https://mm8bdm.net/forum/thread/zandronum-quirks-thread-191) 与 [Trillster 的澄清分析（Post #799）](https://mm8bdm.net/forum/post/799) 进行了纠偏与时效性整理。
 - **Mega Man 8-Bit Deathmatch**：由 CutmanMike 及 MM8BDM 开发团队制作。
 
 ## 免责声明（Disclaimer）
