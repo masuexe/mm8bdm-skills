@@ -2,8 +2,7 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-Cross-project Cursor / Agent Skills: Proper Zandronum conventions + MM8BDM official modding documentation snapshots.
-
+Cross-project Agent Skills: Proper Zandronum conventions + MM8BDM official modding documentation snapshots.
 
 | Skill                                   | Purpose                                                                      |
 | --------------------------------------- | ---------------------------------------------------------------------------- |
@@ -15,37 +14,44 @@ Complies with [Agent Skills](https://agentskills.io/specification): **Knowledge 
 
 ## Installation
 
+### Recommended: skills CLI
 
-
-### Recommended: skills CLI (Cursor)
-
-Run directly in your terminal:
+Install for your AI assistant(s) using the [skills CLI](https://github.com/vercel-labs/skills) (compatible with Cursor, Claude Code, Windsurf, and other Agent Skills compatible tools):
 
 ```bash
-npx skills add masuexe/mm8bdm-skills --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
+npx skills add masuexe/mm8bdm-skills --skill mm8bdm-modding --skill zandronum-modding -g
 ```
+
+> **Tip**: You can target a specific agent directly using `-a <agent>` (e.g. `-a cursor`, `-a claude-code`).
 
 Or from a local clone path (for local development/debugging):
 
 ```powershell
-npx skills add "D:\path\to\mm8bdm-skills" --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
+npx skills add "D:\path\to\mm8bdm-skills" --skill mm8bdm-modding --skill zandronum-modding -g
 ```
 
 Replace the path above with the clone location on your machine (do not hardcode drive letters into the skill body).
 
-### Alternative: Junction (Windows)
+### Alternative: Manual Symlink / Junction
 
+You can also link the skill directories directly into your AI assistant's skills configuration directory:
+
+**Windows (PowerShell Junction):**
 ```powershell
 $src = "<path-to-cloned-mm8bdm-skills>"
-$dst = "$env:USERPROFILE\.cursor\skills"
+$dst = "<path-to-your-agent-skills-dir>"
 New-Item -ItemType Directory -Force -Path $dst | Out-Null
 cmd /c mklink /J "$dst\zandronum-modding" "$src\zandronum-modding"
 cmd /c mklink /J "$dst\mm8bdm-modding" "$src\mm8bdm-modding"
 ```
 
-Do not install into `~\.cursor\skills-cursor\` (Cursor internal skills directory).
+**Linux / macOS (Symlink):**
+```bash
+ln -s "/path/to/mm8bdm-skills/zandronum-modding" "/path/to/your/agent/skills/zandronum-modding"
+ln -s "/path/to/mm8bdm-skills/mm8bdm-modding" "/path/to/your/agent/skills/mm8bdm-modding"
+```
 
-When switching machines: Re-run `npx skills add` or recreate the junctions. Wiki snapshots are already packaged in `mm8bdm-modding/references/`, so you **do not** need to carry the exporter.
+When switching machines: Re-run `npx skills add` or recreate the links. Wiki snapshots are already packaged in `mm8bdm-modding/references/`, so you **do not** need to carry the exporter.
 
 ## Maintenance: Updating Wiki Snapshots
 

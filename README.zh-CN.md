@@ -2,7 +2,7 @@
 
 [English](README.md) | **简体中文**
 
-跨项目 Cursor / Agent Skills：Zandronum 正确写法 + MM8BDM 官方模组文档快照。
+跨项目 Agent Skills：Zandronum 正确写法 + MM8BDM 官方模组文档快照。
 
 | Skill | 用途 |
 |-------|------|
@@ -13,35 +13,45 @@
 
 ## 安装
 
-### 推荐：skills CLI（Cursor）
+### 推荐：skills CLI
 
-在终端直接运行：
+使用 [skills CLI](https://github.com/vercel-labs/skills) 将技能安装至你的 AI 编程助手（兼容 Cursor、Claude Code、Windsurf 等符合 Agent Skills 规范的工具）：
 
 ```bash
-npx skills add masuexe/mm8bdm-skills --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
+npx skills add masuexe/mm8bdm-skills --skill mm8bdm-modding --skill zandronum-modding -g
 ```
+
+> **提示**：可通过 `-a <agent>` 直接指定特定客户端（如 `-a cursor`、`-a claude-code`）。
 
 或者从本地克隆路径安装（用于本地开发或调试）：
 
 ```powershell
-npx skills add "D:\path\to\mm8bdm-skills" --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
+npx skills add "D:\path\to\mm8bdm-skills" --skill mm8bdm-modding --skill zandronum-modding -g
 ```
 
 把上面的路径换成你机器上的 clone 路径（不要写死盘符进 skill 正文）。
 
-### 备选：Junction（Windows）
+### 备选：手动软链接 / Junction
 
+也可将 skill 目录直接链接至你所用 AI 助手的 skills 配置目录：
+
+**Windows（PowerShell Junction）：**
 ```powershell
+# 示例：链接至助手的 skills 目录
 $src = "<path-to-cloned-mm8bdm-skills>"
-$dst = "$env:USERPROFILE\.cursor\skills"
+$dst = "<path-to-your-agent-skills-dir>"
 New-Item -ItemType Directory -Force -Path $dst | Out-Null
 cmd /c mklink /J "$dst\zandronum-modding" "$src\zandronum-modding"
 cmd /c mklink /J "$dst\mm8bdm-modding" "$src\mm8bdm-modding"
 ```
 
-不要装到 `~\.cursor\skills-cursor\`（Cursor 内置 skill 目录）。
+**Linux / macOS（软链接）：**
+```bash
+ln -s "/path/to/mm8bdm-skills/zandronum-modding" "/path/to/your/agent/skills/zandronum-modding"
+ln -s "/path/to/mm8bdm-skills/mm8bdm-modding" "/path/to/your/agent/skills/mm8bdm-modding"
+```
 
-换机：重新 `npx skills add` 或重新 junction。wiki 快照已在 `mm8bdm-modding/references/`，**不必**再带 exporter。
+换机：重新 `npx skills add` 或重新链接。wiki 快照已在 `mm8bdm-modding/references/`，**不必**再带 exporter。
 
 ## 维护：更新 wiki 快照
 
