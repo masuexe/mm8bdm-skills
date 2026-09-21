@@ -1,33 +1,39 @@
 # MM8BDM Skills
 
-跨项目 Cursor / Agent Skills：Zandronum 正确写法 + MM8BDM 官方模组文档快照。
+**English** | [简体中文](README.zh-CN.md)
 
-| Skill | 用途 |
-|-------|------|
-| [zandronum-modding](zandronum-modding/) | DECORATE/ACS 引擎陷阱、lump 命名、无 ZScript |
-| [mm8bdm-modding](mm8bdm-modding/) | `core_*`、ClassBase、DTADD/BARLIB、wiki 教程（打在 `references/`） |
+Cross-project Cursor / Agent Skills: Proper Zandronum conventions + MM8BDM official modding documentation snapshots.
 
-符合 [Agent Skills](https://agentskills.io/specification)：**知识跟 skill 走**，运行时不依赖本机 wiki 仓库路径。
 
-## 安装
+| Skill                                   | Purpose                                                                      |
+| --------------------------------------- | ---------------------------------------------------------------------------- |
+| [zandronum-modding](zandronum-modding/) | DECORATE/ACS engine gotchas, lump naming, no ZScript                         |
+| [mm8bdm-modding](mm8bdm-modding/)       | `core_*`, ClassBase, DTADD/BARLIB, wiki tutorials (bundled in `references/`) |
 
-### 推荐：skills CLI（Cursor）
 
-仓库已推到 GitHub 时：
+Complies with [Agent Skills](https://agentskills.io/specification): **Knowledge lives with the skill**, without runtime dependency on local wiki repository paths.
+
+## Installation
+
+
+
+### Recommended: skills CLI (Cursor)
+
+When the repository is pushed to GitHub:
 
 ```bash
 npx skills add <owner>/mm8bdm-skills --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
 ```
 
-仅本机路径时：
+From a local path:
 
 ```powershell
 npx skills add "D:\path\to\mm8bdm-skills" --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
 ```
 
-把上面的路径换成你机器上的 clone 路径（不要写死盘符进 skill 正文）。
+Replace the path above with the clone location on your machine (do not hardcode drive letters into the skill body).
 
-### 备选：Junction（Windows）
+### Alternative: Junction (Windows)
 
 ```powershell
 $src = "<path-to-cloned-mm8bdm-skills>"
@@ -37,23 +43,41 @@ cmd /c mklink /J "$dst\zandronum-modding" "$src\zandronum-modding"
 cmd /c mklink /J "$dst\mm8bdm-modding" "$src\mm8bdm-modding"
 ```
 
-不要装到 `~\.cursor\skills-cursor\`（Cursor 内置 skill 目录）。
+Do not install into `~\.cursor\skills-cursor\` (Cursor internal skills directory).
 
-换机：重新 `npx skills add` 或重新 junction。wiki 快照已在 `mm8bdm-modding/references/`，**不必**再带 exporter。
+When switching machines: Re-run `npx skills add` or recreate the junctions. Wiki snapshots are already packaged in `mm8bdm-modding/references/`, so you **do not** need to carry the exporter.
 
-## 维护：更新 wiki 快照
+## Maintenance: Updating Wiki Snapshots
 
-从本机英文 wiki 导出同步模组分区（不含玩家向页、不含 `assets/`）：
+Sync modding wiki sections from a local English wiki export (excludes player-facing pages and `assets/`):
 
 ```bash
 node mm8bdm-modding/scripts/sync-wiki.mjs [wiki-output-root]
 ```
 
-省略参数时，脚本用特征文件在附近目录搜索英文导出（不依赖 `MM8BDM-Wiki-Exporter` 等目录名）。也可设环境变量 `MM8BDM_WIKI`。同步后提交 `references/` 变更。
+When omitting the argument, the script searches nearby directories for an English export using signature files (independent of directory names like `MM8BDM-Wiki-Exporter`). You can also set the `MM8BDM_WIKI` environment variable. Commit changes under `references/` after syncing.
 
-## 与各模组 AGENTS.md 的关系
+## Relationship with Per-Mod [AGENTS.md](http://AGENTS.md)
 
-- **Skill**：跨仓库复用的引擎陷阱 + MM8BDM API/教程。
-- **AGENTS.md**：留在具体仓库（身份、目录、UH 命名、`ref/` 等项目私有内容）。
+- **Skill**: Cross-repo reusable engine gotchas + MM8BDM APIs and tutorials.
+- **AGENTS.md**: Stays in the specific mod repository (project identity, directory layout, UH naming, `ref/`, and other private project context).
 
-写 DECORATE/ACS 时两套 skill 会按 description 自动参与；引擎细节见 `zandronum-modding`，MM8BDM API 见 `mm8bdm-modding`。
+When authoring DECORATE/ACS, both skills will participate automatically based on their descriptions; refer to `zandronum-modding` for engine details and `mm8bdm-modding` for MM8BDM APIs.
+
+## Credits & Attribution
+
+This project is built upon the collective knowledge and contributions of the MM8BDM and Zandronum communities:
+
+- **Official MM8BDM Wiki**: Documentation snapshots under `mm8bdm-modding/references/` are adapted from the [Official MM8BDM Notion Wiki](https://mm8bdm.notion.site/), authored by Trillster and community contributors.
+- **Weapon Release Checklist**: Adapted with credit to **StardustMotion**'s [Ultimate New Weapon Checklist (v6b)](https://gist.github.com/StardustMotion/278531046b736b84f637fbfeaba830e6).
+- **Zandronum Engine Gotchas & Quirks**: Engine quirks compiled in `zandronum-modding/` draw significant insights from the community's [Zandronum Quirks Thread](https://mm8bdm.net/forum/thread/zandronum-quirks-thread-191) on MM8BDM.net and various research posts.
+- **Mega Man 8-Bit Deathmatch**: Created by CutmanMike and the MM8BDM Development Team.
+
+
+
+## Disclaimer
+
+- Mega Man and related characters, names, and assets are trademarks and copyright of Capcom Co., Ltd.
+- *Mega Man 8-Bit Deathmatch* is an unofficial, non-commercial fan game.
+- This repository is an unofficial tool designed for AI-assisted modding. It is not affiliated with, endorsed by, or sponsored by Capcom Co., Ltd. or the MM8BDM development team.
+
