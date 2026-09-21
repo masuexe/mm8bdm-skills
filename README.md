@@ -19,13 +19,13 @@ Complies with [Agent Skills](https://agentskills.io/specification): **Knowledge 
 
 ### Recommended: skills CLI (Cursor)
 
-When the repository is pushed to GitHub:
+Run directly in your terminal:
 
 ```bash
-npx skills add <owner>/mm8bdm-skills --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
+npx skills add masuexe/mm8bdm-skills --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
 ```
 
-From a local path:
+Or from a local clone path (for local development/debugging):
 
 ```powershell
 npx skills add "D:\path\to\mm8bdm-skills" --skill mm8bdm-modding --skill zandronum-modding -a cursor -g

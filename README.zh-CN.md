@@ -15,13 +15,13 @@
 
 ### 推荐：skills CLI（Cursor）
 
-仓库已推到 GitHub 时：
+在终端直接运行：
 
 ```bash
-npx skills add <owner>/mm8bdm-skills --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
+npx skills add masuexe/mm8bdm-skills --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
 ```
 
-仅本机路径时：
+或者从本地克隆路径安装（用于本地开发或调试）：
 
 ```powershell
 npx skills add "D:\path\to\mm8bdm-skills" --skill mm8bdm-modding --skill zandronum-modding -a cursor -g
